@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>👋 Welcome</Text>
-      <Text style={styles.name}>Name: Nilesh Borate</Text>
-      <Text style={styles.course}>Course: React Native Basics</Text>
+      <Image
+        source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+        style={{ width: 100, height: 100 }}
+      />
+      <Text style={styles.text}>Hello React Native 🚀</Text>
     </View>
   );
 }
@@ -16,9 +18,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: { fontSize: 30, fontWeight: 'bold', color: 'blue' },
-  name: { fontSize: 20, marginTop: 10 },
-  course: { fontSize: 18, marginTop: 5, color: 'green' },
+  text: { fontSize: 20, marginTop: 10 },
 });
 
 export default App;
