@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log('App loaded');
-  }, []);
-
-  useEffect(() => {
-    console.log('Count Changed :', count);
-  }, [count]);
-
+  const names = ['Amit', 'Raj', 'Nilesh'];
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>Count : {count} </Text>
-      <Button title="Add" onPress={() => setCount(count + 1)} />
+      {names.map((obj, index) => {
+        return (
+          <Text style={{ fontSize: 20 }} key={index}>
+            {obj}
+          </Text>
+        );
+      })}
     </View>
   );
 }
