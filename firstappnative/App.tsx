@@ -1,19 +1,25 @@
-import { Text, View } from 'react-native';
-
-function MyName(props: any) {
-  return (
-    <Text>
-      My Name is {props.name}. And Age is {props.age}
-    </Text>
-  );
-}
+import { useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 function App() {
+  const [count, setCount] = useState(0);
+
+  const buttonAction = () => {
+    setCount(count + 1);
+  };
   return (
-    <View>
-      <MyName name="Nilesh123" age={38} />
+    <View style={styles.container}>
+      <Text style={{ fontSize: 40 }}>Count : {count}</Text>
+      <Button title="Increment" onPress={buttonAction} />
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default App;
