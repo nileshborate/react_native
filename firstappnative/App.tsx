@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [name, setName] = useState('');
 
-  const buttonAction = () => {
-    setCount(count + 1);
-  };
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 40 }}>Count : {count}</Text>
-      <Button title="Increment" onPress={buttonAction} />
+      <TextInput placeholder="Enter Name" onChangeText={setName} />
+      <Text style={{ fontSize: 20 }}>Your Name : {name}</Text>
     </View>
   );
 }
