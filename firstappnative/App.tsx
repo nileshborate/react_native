@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-function App() {
-  const MyName = (props: any) => <Text>My Name is {props.name}</Text>;
+function MyName(props: any) {
   return (
-    <View>
-      <MyName name="Nilesh" />
-    </View>
+    <Text>
+      My Name is {props.name}. And Age is {props.age}
+    </Text>
   );
 }
 
-const styles = StyleSheet.create({});
+function App() {
+  return (
+    <View>
+      <MyName name="Nilesh123" age={38} />
+    </View>
+  );
+}
 
 export default App;
