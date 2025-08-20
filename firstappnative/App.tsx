@@ -2,42 +2,30 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 function App() {
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Header Area</Text>
-      </View>
-      <View style={styles.body}>
-        <Text style={styles.bodyText}>Main Content</Text>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Footer Area</Text>
-      </View>
+    <View style={styles.card}>
+      <Image
+        source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
+        style={styles.image}
+      />
+      <Text style={styles.name}>John Doe</Text>
+      <Text style={styles.role}>Mobile App Developer</Text>
+      <Text style={styles.contact}>📧 john@example.com</Text>
+      <Text style={styles.contact}>📞 +91 9876543210</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
+  card: {
     flex: 1,
-    backgroundColor: 'skyblue',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#e3f2fd',
   },
-  body: {
-    flex: 3,
-    backgroundColor: 'lightgreen',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footer: {
-    flex: 1,
-    backgroundColor: 'orange',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: { fontSize: 22, fontWeight: 'bold' },
-  bodyText: { fontSize: 20 },
-  footerText: { fontSize: 18 },
+  image: { width: 120, height: 120, borderRadius: 60, marginBottom: 15 },
+  name: { fontSize: 24, fontWeight: 'bold' },
+  role: { fontSize: 18, color: 'gray', marginBottom: 10 },
+  contact: { fontSize: 16 },
 });
 
 export default App;
