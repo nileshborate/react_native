@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const MyName = () => <Text>My Name is Nilesh</Text>;
+  const MyName = (props: any) => <Text>My Name is {props.name}</Text>;
   return (
     <View>
-      <MyName />
+      <MyName name="Nilesh" />
     </View>
   );
 }
