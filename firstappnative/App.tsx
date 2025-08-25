@@ -1,7 +1,12 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-const Card = ({ children }) => (
-  <View style={{ padding: 16, margin: 12, borderWidth: 1, borderRadius: 8 }}>
+const Card = ({ children, style = {} }) => (
+  <View
+    style={[
+      { padding: 16, margin: 12, borderWidth: 1, borderRadius: 8 },
+      style,
+    ]}
+  >
     {children}
   </View>
 );
@@ -13,10 +18,8 @@ function App() {
         <Text>First Block !!!</Text>
       </Card>
 
-      <Card>
-        <Text>
-          Second <Text style={{ fontWeight: 'bold' }}>Block</Text> !!!
-        </Text>
+      <Card style={{ backgroundColor: 'red' }}>
+        <Text>Second Block !!!</Text>
       </Card>
 
       <Card>
