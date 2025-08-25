@@ -1,30 +1,15 @@
+import { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-const Card = ({ children, style = {} }) => (
-  <View
-    style={[
-      { padding: 16, margin: 12, borderWidth: 1, borderRadius: 8 },
-      style,
-    ]}
-  >
-    {children}
-  </View>
-);
+const Increment = ({ increase }) => <Button title="Add" onPress={increase} />;
 
 function App() {
+  const [total, setTotal] = useState(0);
+
   return (
-    <View style={{ marginTop: 60 }}>
-      <Card>
-        <Text>First Block !!!</Text>
-      </Card>
-
-      <Card style={{ backgroundColor: 'red' }}>
-        <Text>Second Block !!!</Text>
-      </Card>
-
-      <Card>
-        <Text>Third Block !!!</Text>
-      </Card>
+    <View style={{ padding: 20 }}>
+      <Text>Total : {total}</Text>
+      <Increment increase={() => setTotal(total + 1)} />
     </View>
   );
 }
