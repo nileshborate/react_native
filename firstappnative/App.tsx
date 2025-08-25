@@ -1,38 +1,29 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const data = [
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'Eight',
-    'Nine',
-    'Ten',
-  ];
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      {data.map((item, index) => (
-        <View>
-          <View key={index} style={styles.card}>
-            <Text>{item}</Text>
-          </View>
-          {index % 3 === 0 && <View style={styles.divider} />}
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>Premium Plan</Text>
+        <Text>$9.99/month</Text>
+        <Button title="Subscribe" />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 20, gap: 15 },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   card: {
-    marginHorizontal: 10,
-    fontWeight: '700',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
-  divider: { height: 1, backgroundColor: '#ccc', flex: 1 },
+  title: { fontSize: 18, fontWeight: '700', marginBottom: 8 },
 });
 export default App;
