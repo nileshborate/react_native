@@ -1,17 +1,26 @@
 import { useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const [items, setItems] = useState(['A', 'B']);
+  const [active, setActive] = useState(null);
+  const items = ['Home', 'Search', 'Profile'];
   return (
-    <View style={{ padding: 20 }}>
+    <View style={{ padding: 20, gap: 10 }}>
       {items.map((item, index) => (
-        <Text key={index}>{item}</Text>
+        <Pressable key={index} onPress={() => setActive(item)}>
+          <Text
+            key={index}
+            style={{
+              padding: 8,
+              borderWidth: 1,
+              borderColor: active === item ? 'red' : 'black',
+              backgroundColor: active === item ? 'red' : 'white',
+            }}
+          >
+            {item}
+          </Text>
+        </Pressable>
       ))}
-      <Button
-        onPress={() => setItems([...items, `X${items.length + 1}`])}
-        title="Add Item"
-      />
     </View>
   );
 }
