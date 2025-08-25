@@ -2,22 +2,26 @@ import { useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const [active, setActive] = useState(null);
-  const items = ['Home', 'Search', 'Profile'];
+  const [rating, setRating] = useState(0);
+  const items = [1, 2, 3, 4, 5];
   return (
-    <View style={{ padding: 20, gap: 10 }}>
-      {items.map((item, index) => (
-        <Pressable key={index} onPress={() => setActive(item)}>
+    <View
+      style={{
+        padding: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+      }}
+    >
+      {items.map((number, index) => (
+        <Pressable key={index} onPress={() => setRating(number)}>
           <Text
             key={index}
             style={{
-              padding: 8,
-              borderWidth: 1,
-              borderColor: active === item ? 'red' : 'black',
-              backgroundColor: active === item ? 'red' : 'white',
+              fontSize: 30,
             }}
           >
-            {item}
+            {number <= rating ? '★' : '☆'}
           </Text>
         </Pressable>
       ))}
