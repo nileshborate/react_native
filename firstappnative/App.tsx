@@ -1,47 +1,25 @@
 import { useState } from 'react';
-import {
-  Alert,
-  Button,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 
 function App() {
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
+  const [dark, setDark] = useState(false);
 
-  const valid = email.includes('@') && pass.length >= 6;
-
-  const submit = () => Alert.alert('Login', 'Welcome!!!');
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={pass}
-        onChangeText={setPass}
-        secureTextEntry
-      />
-      <Button title="Sign in" disabled={!valid} onPress={submit} />
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: dark ? '#121212' : '#FAFAFA',
+      }}
+    >
+      <Text style={{ marginBottom: 10, color: dark ? '#fff' : '#000' }}>
+        Dark Mode
+      </Text>
+      <Switch value={dark} onValueChange={setDark} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    marginTop: 60,
-  },
-  input: { borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 10 },
-});
+const styles = StyleSheet.create({});
 export default App;
