@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { Button, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const [dark, setDark] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <View
@@ -10,13 +10,39 @@ function App() {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: dark ? '#121212' : '#FAFAFA',
       }}
     >
-      <Text style={{ marginBottom: 10, color: dark ? '#fff' : '#000' }}>
-        Dark Mode
-      </Text>
-      <Switch value={dark} onValueChange={setDark} />
+      <Button title="Open Model" onPress={() => setOpen(true)} />
+      <Modal
+        visible={open}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setOpen(false)}
+      >
+        <Pressable
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => setOpen(false)}
+        >
+          <View
+            style={{
+              backgroundColor: '#fff',
+              padding: 20,
+              borderRadius: 12,
+              minWidth: 260,
+            }}
+          >
+            <Text style={{ fontWeight: '700', marginBottom: 8 }}>
+              Hello !!!
+            </Text>
+            <Text>Tap outside to close.</Text>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
