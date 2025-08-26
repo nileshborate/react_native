@@ -1,49 +1,24 @@
 import { useState } from 'react';
-import { Button, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
 
 function App() {
-  const [open, setOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setRefreshing(false);
+  };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+    <ScrollView
+      contentContainerStyle={{ padding: 20 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
-      <Button title="Open Model" onPress={() => setOpen(true)} />
-      <Modal
-        visible={open}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setOpen(false)}
-      >
-        <Pressable
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => setOpen(false)}
-        >
-          <View
-            style={{
-              backgroundColor: '#fff',
-              padding: 20,
-              borderRadius: 12,
-              minWidth: 260,
-            }}
-          >
-            <Text style={{ fontWeight: '700', marginBottom: 8 }}>
-              Hello !!!
-            </Text>
-            <Text>Tap outside to close.</Text>
-          </View>
-        </Pressable>
-      </Modal>
-    </View>
+      <Text>Pull down to refresh</Text>
+    </ScrollView>
   );
 }
 
