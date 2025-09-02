@@ -1,24 +1,27 @@
-import { useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
+import { useRef, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 function App() {
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setRefreshing(false);
+  const [liked, setLiked] = useState(false);
+  const lastTap = useRef(0);
+  const onTap = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 300) {
+      setLiked(!liked);
+    }
+    lastTap.current = now;
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{ padding: 20 }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Text>Pull down to refresh</Text>
-    </ScrollView>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Pressable
+        style={{ padding: 24, backgroundColor: '#E1F5FE', borderRadius: 12 }}
+        onPress={onTap}
+      >
+        <Text style={{ fontSize: 28 }}>{liked ? '❤️' : '🤍'}</Text>
+      </Pressable>
+      <Text style={{ marginTop: 8 }}>Double-tap the card</Text>
+    </View>
   );
 }
 
