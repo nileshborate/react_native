@@ -1,54 +1,36 @@
-import { useRef, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, SectionList, Text, View } from 'react-native';
 
 function App() {
-  const [refreshing, setRefreshing] = useState(false);
-  const [data, setData] = useState(
-    Array.from({ length: 5 }, (_, i) => `Row ${i + 1}`),
-  );
-  const Sep = () => (
-    <View
-      style={{ height: 1, backgroundColor: '#eee', marginHorizontal: 12 }}
-    />
-  );
-  const Empty = () => (
-    <Text style={{ textAlign: 'center', marginTop: 40 }}>No items found</Text>
-  );
-
-  const refresh = async () => {
-    setRefreshing(true);
-    await new Promise(r => setTimeout(r, 800));
-    setData(arr => [...arr, `Row ${arr.length + 1}`]);
-    setRefreshing(false);
-  };
+  const [active, setActive] = useState(null);
+  const sections = [
+    { title: 'Fruits', data: ['Apple', 'Banana', 'Cherry'] },
+    { title: 'Veggies', data: ['Carrot', 'Onion', 'Peas'] },
+  ];
   return (
     <View style={{ paddingTop: 60 }}>
-      <FlatList
-        data={data}
-        ItemSeparatorComponent={Sep}
-        ListEmptyComponent={Empty}
-        ListHeaderComponent={
-          <Text style={{ padding: 12, fontSize: 18, fontWeight: '700' }}>
-            Header
-          </Text>
-        }
-        ListFooterComponent={
-          <Text style={{ padding: 12, textAlign: 'center' }}>— End —</Text>
-        }
-        renderItem={({ item }) => {
-          return <Text style={{ padding: 12, fontSize: 16 }}>{item}</Text>;
-        }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-        numColumns={3}
-        keyExtractor={x => x + 1}
-        columnWrapperStyle={{ gap: 30 }}
-        contentContainerStyle={{ gap: 20 }}
+      <SectionList
+        sections={sections}
+        renderSectionHeader={({ section }) => (
+          <View style={{ backgroundColor: '#F0F0F0', padding: 8 }}>
+            <Text>{section.title}</Text>
+          </View>
+        )}
+        renderItem={({ item }) => (
+          <Pressable style={{ padding: 12 }} onPress={() => setActive(item)}>
+            <Text
+              style={{
+                fontWeight: item === active ? '800' : '400',
+                color: item === active ? 'blue' : 'black',
+              }}
+            >
+              {item}
+            </Text>
+          </Pressable>
+        )}
       />
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
 export default App;
