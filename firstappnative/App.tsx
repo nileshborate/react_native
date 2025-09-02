@@ -1,33 +1,36 @@
 import { useState } from 'react';
-import { Pressable, SectionList, Text, View } from 'react-native';
+import { Alert, FlatList, Pressable, Text, View } from 'react-native';
 
 function App() {
-  const [active, setActive] = useState(null);
-  const sections = [
-    { title: 'Fruits', data: ['Apple', 'Banana', 'Cherry'] },
-    { title: 'Veggies', data: ['Carrot', 'Onion', 'Peas'] },
-  ];
+  const [data, setData] = useState(
+    Array.from({ length: 8 }, (_, i) => ({
+      id: String(i + 1),
+      label: `Row ${i + 1}`,
+    })),
+  );
+
+  const remove = (id: any) => setData(data.filter(x => x.id !== id));
   return (
     <View style={{ paddingTop: 60 }}>
-      <SectionList
-        sections={sections}
-        renderSectionHeader={({ section }) => (
-          <View style={{ backgroundColor: '#F0F0F0', padding: 8 }}>
-            <Text>{section.title}</Text>
-          </View>
-        )}
+      <FlatList
+        data={data}
         renderItem={({ item }) => (
-          <Pressable style={{ padding: 12 }} onPress={() => setActive(item)}>
-            <Text
-              style={{
-                fontWeight: item === active ? '800' : '400',
-                color: item === active ? 'blue' : 'black',
-              }}
-            >
-              {item}
-            </Text>
+          <Pressable
+            onLongPress={() =>
+              Alert.alert('Delete', `Remove ${item.label}`, [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete',
+                  style: 'destructive',
+                  onPress: () => remove(item.id),
+                },
+              ])
+            }
+          >
+            <Text style={{ padding: 14 }}>{item.label}</Text>
           </Pressable>
         )}
+        keyExtractor={x => x.id}
       />
     </View>
   );
