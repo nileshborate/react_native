@@ -1,36 +1,35 @@
 import { useState } from 'react';
-import { Alert, FlatList, Pressable, Text, View } from 'react-native';
+import { Pressable, SectionList, Text, View } from 'react-native';
 
 function App() {
-  const [data, setData] = useState(
-    Array.from({ length: 8 }, (_, i) => ({
-      id: String(i + 1),
-      label: `Row ${i + 1}`,
-    })),
-  );
+  const [collapsed, setCollapsed] = useState({});
+  const base = [
+    { title: 'A', data: ['Apple', 'Avocado'] },
+    { title: 'B', data: ['Banana', 'Blueberry'] },
+  ];
 
-  const remove = (id: any) => setData(data.filter(x => x.id !== id));
+  const sections = base.map(s => ({
+    ...s,
+    data: collapsed[s.title] ? [] : s.data,
+  }));
+
   return (
     <View style={{ paddingTop: 60 }}>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => (
+      <SectionList
+        sections={sections}
+        renderSectionHeader={({ section }) => (
           <Pressable
-            onLongPress={() =>
-              Alert.alert('Delete', `Remove ${item.label}`, [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Delete',
-                  style: 'destructive',
-                  onPress: () => remove(item.id),
-                },
-              ])
+            style={{ backgroundColor: '#EEE', padding: 8 }}
+            onPress={() =>
+              setCollapsed(c => ({ ...c, [section.title]: !c[section.title] }))
             }
           >
-            <Text style={{ padding: 14 }}>{item.label}</Text>
+            <Text style={{ fontWeight: '700' }}>
+              {section.title} {collapsed[section.title] ? '▸' : '▾'}
+            </Text>
           </Pressable>
         )}
-        keyExtractor={x => x.id}
+        renderItem={({ item }) => <Text>{item}</Text>}
       />
     </View>
   );
