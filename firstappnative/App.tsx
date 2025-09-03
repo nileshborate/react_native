@@ -5,20 +5,24 @@ import 'react-native-gesture-handler';
 
 function Home({ navigation }) {
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home</Text>
       <Button
         title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
+        onPress={() =>
+          navigation.navigate('Details', { id: 10, name: 'Nilesh' })
+        }
       />
     </View>
   );
 }
-function Details({ navigation }) {
+function Details({ route }) {
+  const { id, name } = route.params;
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details</Text>
-      <Button title="Home" onPress={() => navigation.navigate('Home')} />
+      <Text>ID: {id}</Text>
+      <Text>Name: {name}</Text>
     </View>
   );
 }
