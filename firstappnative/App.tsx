@@ -1,37 +1,37 @@
-import { useState } from 'react';
-import { Pressable, SectionList, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Button, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
 
-function App() {
-  const [collapsed, setCollapsed] = useState({});
-  const base = [
-    { title: 'A', data: ['Apple', 'Avocado'] },
-    { title: 'B', data: ['Banana', 'Blueberry'] },
-  ];
-
-  const sections = base.map(s => ({
-    ...s,
-    data: collapsed[s.title] ? [] : s.data,
-  }));
-
+function Home({ navigation }) {
   return (
-    <View style={{ paddingTop: 60 }}>
-      <SectionList
-        sections={sections}
-        renderSectionHeader={({ section }) => (
-          <Pressable
-            style={{ backgroundColor: '#EEE', padding: 8 }}
-            onPress={() =>
-              setCollapsed(c => ({ ...c, [section.title]: !c[section.title] }))
-            }
-          >
-            <Text style={{ fontWeight: '700' }}>
-              {section.title} {collapsed[section.title] ? '▸' : '▾'}
-            </Text>
-          </Pressable>
-        )}
-        renderItem={({ item }) => <Text>{item}</Text>}
+    <View>
+      <Text>Home</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
       />
     </View>
+  );
+}
+function Details({ navigation }) {
+  return (
+    <View>
+      <Text>Details</Text>
+      <Button title="Home" onPress={() => navigation.navigate('Home')} />
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Details" component={Details} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
