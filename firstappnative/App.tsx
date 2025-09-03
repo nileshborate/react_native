@@ -1,9 +1,23 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button, Text, View } from 'react-native';
+import { useLayoutEffect } from 'react';
+import { Alert, Button, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 
 function Home({ navigation }) {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Dashboard',
+      headerRight: () => (
+        <Button
+          title="Info"
+          onPress={() => Alert.alert('Info!')}
+          color="#841584"
+        />
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home</Text>
@@ -33,7 +47,11 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Details" component={Details} />
+        <Stack.Screen
+          name="Details"
+          component={Details}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
