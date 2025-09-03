@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { Button, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -11,18 +11,21 @@ function Screen({ label }) {
   );
 }
 
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" children={() => <Screen label="Home" />} />
-        <Tab.Screen name="Search" children={() => <Screen label="Search" />} />
-        <Tab.Screen
+      <Drawer.Navigator>
+        <Drawer.Screen name="Home" children={() => <Screen label="Home" />} />
+        <Drawer.Screen
+          name="Search"
+          children={() => <Screen label="Search" />}
+        />
+        <Drawer.Screen
           name="Profile"
           children={() => <Screen label="Profile" />}
         />
-      </Tab.Navigator>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
