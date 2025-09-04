@@ -1,68 +1,50 @@
-import {
-  NavigationContainer,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { Button, Text, View } from 'react-native';
-import 'react-native-gesture-handler';
+import { ActivityIndicator, FlatList, Text } from 'react-native';
 
-const Home = ({ navigation, route }) => {
-  const [value, setValue] = useState('None');
-  useEffect(() => {
-    if (route?.params?.value) {
-      setValue(route?.params?.value);
-    }
-  }, [route?.params?.value]);
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Selected : {value}</Text>
-      <Button
-        title="Pick Value"
-        onPress={() =>
-          navigation.navigate('Picker', {
-            onPick: v => navigation.setParams({ value: v }),
-          })
-        }
-      />
-    </View>
-  );
-};
-const Picker = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const onPick = route?.params?.onPick;
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Picker</Text>
-      <Button
-        title="Choose A"
-        onPress={() => {
-          onPick('A');
-          navigation.goBack();
-        }}
-      />
-      <Button
-        title="Choose B"
-        onPress={() => {
-          onPick('B');
-          navigation.goBack();
-        }}
-      />
-    </View>
-  );
-};
-
-const Stack = createNativeStackNavigator();
 function App() {
+  const [data, setData] = useState([]);
+  const [err, setErr] = useState('');
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const resp = await fetch(
+          'https://jsonplaceholder.typicode.com/posts?_limit=100',
+        );
+        const data = await resp.json();
+        console.log('Response = ', data);
+        setData(data);
+      } catch (e) {
+        setErr(e?.message || e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <ActivityIndicator size="large" color="#000" style={{ marginTop: 80 }} />
+    );
+  }
+
+  if (err) {
+    return (
+      <Text style={{ marginTop: 80, color: 'red', textAlign: 'center' }}>
+        {err}
+      </Text>
+    );
+  }
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Picker" component={Picker} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <FlatList
+      style={{ marginTop: 50 }}
+      data={data}
+      keyExtractor={x => String(x.id)}
+      renderItem={({ item }) => (
+        <Text style={{ padding: 12 }}>{item.title}</Text>
+      )}
+    />
   );
 }
 
