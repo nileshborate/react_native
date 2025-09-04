@@ -1,31 +1,67 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 
-function Screen({ label }) {
+const Home = ({ navigation, route }) => {
+  const [value, setValue] = useState('None');
+  useEffect(() => {
+    if (route?.params?.value) {
+      setValue(route?.params?.value);
+    }
+  }, [route?.params?.value]);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 20 }}>{label}</Text>
+      <Text>Selected : {value}</Text>
+      <Button
+        title="Pick Value"
+        onPress={() =>
+          navigation.navigate('Picker', {
+            onPick: v => navigation.setParams({ value: v }),
+          })
+        }
+      />
     </View>
   );
-}
+};
+const Picker = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const onPick = route?.params?.onPick;
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Picker</Text>
+      <Button
+        title="Choose A"
+        onPress={() => {
+          onPick('A');
+          navigation.goBack();
+        }}
+      />
+      <Button
+        title="Choose B"
+        onPress={() => {
+          onPick('B');
+          navigation.goBack();
+        }}
+      />
+    </View>
+  );
+};
 
-const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name="Home" children={() => <Screen label="Home" />} />
-        <Drawer.Screen
-          name="Search"
-          children={() => <Screen label="Search" />}
-        />
-        <Drawer.Screen
-          name="Profile"
-          children={() => <Screen label="Profile" />}
-        />
-      </Drawer.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Picker" component={Picker} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
