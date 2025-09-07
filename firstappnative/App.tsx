@@ -1,57 +1,40 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Button, Text, View } from 'react-native';
 
-function App() {
-  const [data, setData] = useState([]);
-  const [q, setQ] = useState('');
+function useInterval(callback, delay, running = true) {
+  const saved = useRef(callback);
+  useEffect(() => {
+    saved.current = callback;
+  }, [callback]);
 
   useEffect(() => {
-    const fetchPage = setTimeout(async () => {
-      if (!q) {
-        setData([]);
-        return;
-      }
-      const resp = await fetch(`https://jsonplaceholder.typicode.com/users`);
-      const all = await resp.json();
-      console.log('Response = ', all);
-      const filtered = all.filter(row =>
-        row.name.toLowerCase().includes(q.toLowerCase()),
-      );
-      console.log('filtered = ', filtered);
+    if (!running || delay == null) return;
+    const id = setInterval(() => saved.current(), delay);
+    return () => clearInterval(id);
+  }, [delay, running]);
+}
 
-      setData(filtered);
-    }, 500);
-    return () => clearTimeout(fetchPage);
-  }, [q]);
-
+function App() {
+  const [run, setRun] = useState(true);
+  const [sec, setSec] = useState(0);
+  useInterval(() => setSec(s => s + 1), 1000, run);
   return (
-    <View style={{ marginTop: 20, padding: 12 }}>
-      <TextInput
-        placeholder="Search Users...."
-        style={{
-          borderWidth: 1,
-          borderRadius: 8,
-          padding: 12,
-          marginBottom: 10,
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+      }}
+    >
+      <Text style={{ fontSize: 18 }}>Seconds: {sec}</Text>
+      <Button
+        title={run ? 'Pause' : 'Resume'}
+        onPress={() => {
+          setRun(!run);
         }}
-        onChangeText={setQ}
-        value={q}
       />
-      <FlatList
-        data={data}
-        keyExtractor={x => String(x.id)}
-        renderItem={({ item }) => (
-          <Text style={{ padding: 12 }}>
-            {item.id} : {item.name}
-          </Text>
-        )}
-      />
+      <Button title="Reset" onPress={() => setSec(0)} />
     </View>
   );
 }
