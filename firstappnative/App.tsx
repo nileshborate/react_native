@@ -1,40 +1,46 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Text, View } from 'react-native';
-
-function useInterval(callback, delay, running = true) {
-  const saved = useRef(callback);
-  useEffect(() => {
-    saved.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    if (!running || delay == null) return;
-    const id = setInterval(() => saved.current(), delay);
-    return () => clearInterval(id);
-  }, [delay, running]);
-}
+import { Button, Text, TextInput, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App() {
-  const [run, setRun] = useState(true);
-  const [sec, setSec] = useState(0);
-  useInterval(() => setSec(s => s + 1), 1000, run);
+  const [name, setName] = useState('');
+  const [saved, setSaved] = useState('');
+
+  const save = async () => {
+    await AsyncStorage.setItem('user:name', name);
+  };
+  const load = async () => {
+    const item = (await AsyncStorage.getItem('user:name')) || '';
+    setSaved(item);
+  };
+  const clear = async () => {
+    await AsyncStorage.removeItem('user:name');
+    setSaved('');
+  };
+
   return (
     <View
       style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        marginTop: 80,
+        padding: 16,
         gap: 10,
       }}
     >
-      <Text style={{ fontSize: 18 }}>Seconds: {sec}</Text>
-      <Button
-        title={run ? 'Pause' : 'Resume'}
-        onPress={() => {
-          setRun(!run);
+      <TextInput
+        placeholder="Enter Name"
+        onChangeText={setName}
+        value={name}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 10,
         }}
       />
-      <Button title="Reset" onPress={() => setSec(0)} />
+      <Button title="Save" onPress={save} />
+      <Button title="Load" onPress={load} />
+      <Button title="Clear" onPress={clear} />
+      <Text>Saved : {saved || '(none)'}</Text>
     </View>
   );
 }
