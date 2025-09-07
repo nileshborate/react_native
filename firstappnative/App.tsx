@@ -1,25 +1,43 @@
-import { useState } from 'react';
-import { Alert, Button, Text, TextInput, View } from 'react-native';
-import * as Keychain from 'react-native-keychain';
+import { useEffect, useState } from 'react';
+import { Button, FlatList, Text, TextInput, View } from 'react-native';
+import { openDatabase } from 'react-native-sqlite-storage';
+
+const db = openDatabase({ name: 'notes.db' });
 
 function App() {
-  const [u, setU] = useState('');
-  const [p, setP] = useState('');
+  const [title, setTitle] = useState('');
   const [show, setShow] = useState('');
+  const [rows, setRows] = useState([]);
 
-  const save = async () => {
-    await Keychain.setGenericPassword(u, p, {
-      accessControl: Keychain.ACCESS_CONTROL.DEVICE_PASSCODE_OR_BIOMETRICS,
+  useEffect(() => {
+    db.transaction(
+      tx => {
+        tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)',
+        );
+      },
+      undefined,
+      refresh,
+    );
+    console.log('Table created');
+  }, []);
+
+  const add = () => {
+    db.transaction(tx => {
+      tx.executeSql('INSERT INTO notes (title) VALUES (?)', [title], refresh);
     });
-    Alert.alert('Saved Successfully');
   };
-  const load = async () => {
-    const cred = await Keychain.getGenericPassword();
-    setShow(cred ? `${cred.username} : ${cred.password}` : '(none)');
-  };
-  const reset = async () => {
-    await Keychain.resetGenericPassword();
-    setShow('');
+
+  const refresh = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT id,title FROM notes order by id',
+        [],
+        (_, { rows }) => {
+          setRows(rows.raw());
+        },
+      );
+    });
   };
   return (
     <View
@@ -30,9 +48,9 @@ function App() {
       }}
     >
       <TextInput
-        placeholder="Username"
-        value={u}
-        onChangeText={setU}
+        placeholder="New Note"
+        value={title}
+        onChangeText={setTitle}
         style={{
           borderWidth: 1,
           borderRadius: 8,
@@ -40,22 +58,15 @@ function App() {
           marginBottom: 8,
         }}
       />
-      <TextInput
-        placeholder="Password"
-        value={p}
-        onChangeText={setP}
-        secureTextEntry
-        style={{
-          borderWidth: 1,
-          borderRadius: 8,
-          padding: 10,
-          marginBottom: 8,
-        }}
+      <Button title="Add" onPress={add} />
+      <FlatList
+        style={{ marginTop: 12 }}
+        data={rows}
+        renderItem={({ item }) => (
+          <Text style={{ padding: 8 }}>{item.title}</Text>
+        )}
+        keyExtractor={item => item.id}
       />
-      <Button title="Save (Secure)" onPress={save} />
-      <Button title="Load" onPress={load} />
-      <Button title="Reset" onPress={reset} />
-      <Text style={{ marginTop: 10 }}>{show}</Text>
     </View>
   );
 }
