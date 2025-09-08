@@ -1,72 +1,53 @@
-import { useEffect, useState } from 'react';
-import { Button, FlatList, Text, TextInput, View } from 'react-native';
-import { openDatabase } from 'react-native-sqlite-storage';
-
-const db = openDatabase({ name: 'notes.db' });
+import { useRef } from 'react';
+import { Animated, Button, Dimensions, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
 
 function App() {
-  const [title, setTitle] = useState('');
-  const [show, setShow] = useState('');
-  const [rows, setRows] = useState([]);
+  const H = Dimensions.get('window').height;
+  const y = useRef(new Animated.Value(H)).current;
 
-  useEffect(() => {
-    db.transaction(
-      tx => {
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)',
-        );
-      },
-      undefined,
-      refresh,
-    );
-    console.log('Table created');
-  }, []);
+  const open = () =>
+    Animated.timing(y, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
 
-  const add = () => {
-    db.transaction(tx => {
-      tx.executeSql('INSERT INTO notes (title) VALUES (?)', [title], refresh);
-    });
-  };
+  const close = () =>
+    Animated.timing(y, {
+      toValue: H,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
 
-  const refresh = () => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT id,title FROM notes order by id',
-        [],
-        (_, { rows }) => {
-          setRows(rows.raw());
-        },
-      );
-    });
-  };
   return (
     <View
       style={{
-        marginTop: 80,
-        padding: 16,
-        gap: 10,
+        flex: 1,
       }}
     >
-      <TextInput
-        placeholder="New Note"
-        value={title}
-        onChangeText={setTitle}
+      <View style={{ marginTop: 80, alignItems: 'center', gap: 5 }}>
+        <Button title="Open sheet" onPress={open} />
+        <Button title="Close" onPress={close} />
+      </View>
+
+      <Animated.View
         style={{
-          borderWidth: 1,
-          borderRadius: 8,
-          padding: 10,
-          marginBottom: 8,
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          transform: [{ translateY: y }],
+          backgroundColor: '#fff',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          padding: 20,
+          elevation: 8,
         }}
-      />
-      <Button title="Add" onPress={add} />
-      <FlatList
-        style={{ marginTop: 12 }}
-        data={rows}
-        renderItem={({ item }) => (
-          <Text style={{ padding: 8 }}>{item.title}</Text>
-        )}
-        keyExtractor={item => item.id}
-      />
+      >
+        <Text style={{ fontWeight: '700' }}>Bottom sheet</Text>
+        <Text>slides from Bottom</Text>
+      </Animated.View>
     </View>
   );
 }
