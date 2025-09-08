@@ -1,52 +1,50 @@
 import { useRef } from 'react';
-import { Animated, Button, Dimensions, Text, View } from 'react-native';
+import {
+  Animated,
+  Button,
+  Dimensions,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import 'react-native-gesture-handler';
 
 function App() {
-  const H = Dimensions.get('window').height;
-  const y = useRef(new Animated.Value(H)).current;
+  const scale = useRef(new Animated.Value(1)).current;
 
-  const open = () =>
-    Animated.timing(y, {
-      toValue: 0,
-      duration: 500,
+  const bump = () => {
+    Animated.spring(scale, {
+      toValue: 1.15,
       useNativeDriver: true,
-    }).start();
-
-  const close = () =>
-    Animated.timing(y, {
-      toValue: H,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-
+      friction: 3,
+      tension: 120,
+    }).start(() => {
+      Animated.spring(scale, {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
   return (
     <View
       style={{
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <View style={{ marginTop: 80, alignItems: 'center', gap: 5 }}>
-        <Button title="Open sheet" onPress={open} />
-        <Button title="Close" onPress={close} />
-      </View>
-
-      <Animated.View
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          transform: [{ translateY: y }],
-          backgroundColor: '#fff',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          padding: 20,
-          elevation: 8,
-        }}
-      >
-        <Text style={{ fontWeight: '700' }}>Bottom sheet</Text>
-        <Text>slides from Bottom</Text>
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <Pressable
+          style={{
+            paddingVertical: 14,
+            paddingHorizontal: 22,
+            backgroundColor: '#1976D2',
+            borderRadius: 12,
+          }}
+          onPress={bump}
+        >
+          <Text style={{ color: '#fff', fontWeight: '700' }}>Bounce</Text>
+        </Pressable>
       </Animated.View>
     </View>
   );
